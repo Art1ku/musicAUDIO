@@ -17,6 +17,7 @@ public class MainController {
     private List<File> audioFiles;
     private MediaPlayer mediaPlayer;
     private int currentIndex = -1;
+    private boolean isUserSeeking = false;
 
     private ListView<String> trackListView;
     private Slider progressSlider;
@@ -27,10 +28,24 @@ public class MainController {
         this.progressSlider = slider;
         this.trackLabel = label;
         listView.setItems(trackNames);
+
         listView.setOnMouseClicked(e -> {
             int selected = listView.getSelectionModel().getSelectedIndex();
             if (selected != -1) {
                 playTrack(selected);
+            }
+        });
+
+        progressSlider.setOnMousePressed(e -> isUserSeeking = true);
+        progressSlider.setOnMouseReleased(e -> {
+            isUserSeeking = false;
+            seek(progressSlider.getValue());
+        });
+
+        progressSlider.valueProperty().addListener((obs, oldVal, newVal) -> {
+            if (isUserSeeking && mediaPlayer != null) {
+                trackLabel.setText("Перемотка: " + Util.formatTime(Duration.seconds(newVal.doubleValue())) +
+                        " / " + Util.formatTime(mediaPlayer.getTotalDuration()));
             }
         });
     }
@@ -92,12 +107,14 @@ public class MainController {
         });
 
         mediaPlayer.currentTimeProperty().addListener((obs, oldTime, newTime) -> {
-            Platform.runLater(() -> {
-                progressSlider.setValue(newTime.toSeconds());
-                String currentTime = Util.formatTime(newTime);
-                String totalTime = Util.formatTime(mediaPlayer.getTotalDuration());
-                trackLabel.setText("Сейчас играет: " + file.getName() + " [" + currentTime + "/" + totalTime + "]");
-            });
+            if (!isUserSeeking) {
+                Platform.runLater(() -> {
+                    progressSlider.setValue(newTime.toSeconds());
+                    String currentTime = Util.formatTime(newTime);
+                    String totalTime = Util.formatTime(mediaPlayer.getTotalDuration());
+                    trackLabel.setText("Сейчас играет: " + file.getName() + " [" + currentTime + "/" + totalTime + "]");
+                });
+            }
         });
 
         mediaPlayer.setOnEndOfMedia(this::next);

@@ -17,7 +17,7 @@ public class HelloApplication extends Application {
         Button openFolderBtn = new Button("Открыть папку");
         Button playBtn = new Button("Play");
         Button pauseBtn = new Button("Pause");
-        Button stopBtn = new Button("From start");
+        Button stopBtn = new Button("Stop");
         Button nextBtn = new Button("Next");
         Button prevBtn = new Button("Previous");
 
