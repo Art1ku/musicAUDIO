@@ -42,13 +42,10 @@ public class HelloApplication extends Application {
         root.setCenter(trackList);
         root.setBottom(bottom);
 
-        // Устанавливаем темный фон для всего окна
         root.setStyle("-fx-background-color: #333333;");
 
-        // Устанавливаем padding для root (всего окна)
         root.setPadding(new javafx.geometry.Insets(20));
 
-        // Устанавливаем темный фон и белый текст для кнопок
         openFolderBtn.setStyle("-fx-background-color: #444444; -fx-text-fill: white;");
         playBtn.setStyle("-fx-background-color: #444444; -fx-text-fill: white;");
         pauseBtn.setStyle("-fx-background-color: #444444; -fx-text-fill: white;");
@@ -56,10 +53,8 @@ public class HelloApplication extends Application {
         nextBtn.setStyle("-fx-background-color: #444444; -fx-text-fill: white;");
         prevBtn.setStyle("-fx-background-color: #444444; -fx-text-fill: white;");
 
-        // Устанавливаем темный фон и белый текст для списка треков
         trackList.setStyle("-fx-background-color: #444444; -fx-text-fill: white;");
 
-        // Устанавливаем темный фон и белый текст для информации о треке
         trackInfo.setStyle("-fx-text-fill: white;");
 
         Scene scene = new Scene(root, 800, 500);
