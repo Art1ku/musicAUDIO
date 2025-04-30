@@ -6,7 +6,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
-import javafx.scene.paint.Color;
 
 public class HelloApplication extends Application {
 
@@ -20,12 +19,14 @@ public class HelloApplication extends Application {
         Button stopBtn = new Button("Stop");
         Button nextBtn = new Button("Next");
         Button prevBtn = new Button("Previous");
+        Button repeatBtn = new Button("🔁");
+        Button shuffleBtn = new Button("🔀");
 
         ListView<String> trackList = new ListView<>();
         Slider progressSlider = new Slider();
         Label trackInfo = new Label("Нет трека");
 
-        controller.initUI(trackList, progressSlider, trackInfo);
+        controller.initUI(trackList, progressSlider, trackInfo, repeatBtn, shuffleBtn);
 
         openFolderBtn.setOnAction(e -> controller.openDirectory());
         playBtn.setOnAction(e -> controller.play());
@@ -33,17 +34,16 @@ public class HelloApplication extends Application {
         stopBtn.setOnAction(e -> controller.stop());
         nextBtn.setOnAction(e -> controller.next());
         prevBtn.setOnAction(e -> controller.previous());
+        repeatBtn.setOnAction(e -> controller.toggleRepeat());
+        shuffleBtn.setOnAction(e -> controller.toggleShuffle());
 
-        progressSlider.setOnMouseReleased(e -> controller.seek(progressSlider.getValue()));
-
-        HBox controls = new HBox(5, openFolderBtn, playBtn, pauseBtn, stopBtn, prevBtn, nextBtn);
+        HBox controls = new HBox(5, openFolderBtn, playBtn, pauseBtn, stopBtn, prevBtn, nextBtn, repeatBtn, shuffleBtn);
         VBox bottom = new VBox(5, trackInfo, progressSlider, controls);
         BorderPane root = new BorderPane();
         root.setCenter(trackList);
         root.setBottom(bottom);
 
         root.setStyle("-fx-background-color: #333333;");
-
         root.setPadding(new javafx.geometry.Insets(20));
 
         openFolderBtn.setStyle("-fx-background-color: #444444; -fx-text-fill: white;");
@@ -52,12 +52,27 @@ public class HelloApplication extends Application {
         stopBtn.setStyle("-fx-background-color: #444444; -fx-text-fill: white;");
         nextBtn.setStyle("-fx-background-color: #444444; -fx-text-fill: white;");
         prevBtn.setStyle("-fx-background-color: #444444; -fx-text-fill: white;");
+        repeatBtn.setStyle("-fx-background-color: #444444; -fx-text-fill: white;");
+        shuffleBtn.setStyle("-fx-background-color: #444444; -fx-text-fill: white;");
 
         trackList.setStyle("-fx-background-color: #444444; -fx-text-fill: white;");
-
         trackInfo.setStyle("-fx-text-fill: white;");
 
         Scene scene = new Scene(root, 800, 500);
+        scene.setOnKeyPressed(e -> {
+            switch (e.getCode()) {
+                case SPACE:
+                    controller.togglePlayPause();
+                    break;
+                case LEFT:
+                    controller.seekBackward();
+                    break;
+                case RIGHT:
+                    controller.seekForward();
+                    break;
+            }
+        });
+
         primaryStage.setTitle("Audio Player");
         primaryStage.setScene(scene);
         primaryStage.show();

@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 public class Util {
     public static File chooseDirectory() {
         DirectoryChooser chooser = new DirectoryChooser();
-        chooser.setTitle("Выберите папку с аудио");
+        chooser.setTitle("Choose directory with music");
         return chooser.showDialog(new Stage());
     }
 
@@ -27,6 +27,9 @@ public class Util {
     }
 
     public static String formatTime(Duration duration) {
+        if (duration == null) {
+            return "00:00";
+        }
         int minutes = (int) duration.toMinutes();
         int seconds = (int) duration.toSeconds() % 60;
         return String.format("%02d:%02d", minutes, seconds);
